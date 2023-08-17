@@ -57,7 +57,7 @@ public class Procedimientos {
 			c.setAutoCommit(false);
 			CallableStatement proc = c.prepareCall("{ ? =  call alumnos_upper (?) }");
 			proc.registerOutParameter(1, Types.OTHER);
-			proc.setString(2, "c%");
+			proc.setString(2, "M%");
 			proc.execute();
 			ResultSet rs = (ResultSet) proc.getObject(1);
 			while (rs.next()) {
@@ -83,6 +83,28 @@ public class Procedimientos {
 			proc.execute();
 
 			long resultado = proc.getLong(1);
+
+			System.out.println("El valor de retorno del proc es: " + resultado);
+
+			proc.close();
+
+			c.commit();
+			c.setAutoCommit(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void callingDatabaseSizePretty(Connection c) {
+		try {
+			c.setAutoCommit(false);
+			CallableStatement proc = c.prepareCall("{ ? =  call pg_size_pretty(pg_database_size (?)) }");
+			proc.registerOutParameter(1, Types.VARCHAR);
+			proc.setString(2, "conta");
+			proc.execute();
+
+			String resultado = proc.getString(1);
 
 			System.out.println("El valor de retorno del proc es: " + resultado);
 
@@ -121,11 +143,11 @@ public class Procedimientos {
 		try {
 			Connection c = ConexionBD.getConexion();
 
-			//createProcedure(c);
-			llamarProcedimiento(c);
-			// callingDatabaseSize(c);
-
-			// llamarProcedimientoRS(c);
+		//createProcedure(c);
+			//llamarProcedimiento(c);
+			//callingDatabaseSize(c);
+			//callingDatabaseSizePretty(c);
+		//	llamarProcedimientoRS(c);
 			c.close();
 
 		} catch (SQLException e) {
