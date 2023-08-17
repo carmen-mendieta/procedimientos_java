@@ -11,7 +11,7 @@ import py.edu.ucsa.jdbc01.conexion.ConexionBD;
 
 public class Procedimientos {
 
-	public static void createProcedure(Connection c) {
+	public static void createFunction(Connection c) {
 		Statement s;
 
 		try {
@@ -51,6 +51,31 @@ public class Procedimientos {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void createProcedure(Connection c) {
+	    Statement s;
+	    try {
+	        s = c.createStatement();
+
+	        String createStmt = "CREATE OR REPLACE PROCEDURE insert_alumnos("
+	            + "ced int4, nombre character varying, direccion character varying, "
+	            + "celular character varying, email character varying) " +
+	            "LANGUAGE SQL " +
+	            "AS " +
+	            "$$ " +
+	            "INSERT INTO alumnos(cedula, nombre, direccion, celular, email) " +
+	            "VALUES (ced, nombre, direccion, celular, email); " +
+	            "$$";
+
+	        s.executeUpdate(createStmt);
+	        s.close();
+
+	    } catch (Exception e) {
+	        System.out.println("No se creó el procedimiento: " + e.getMessage());
+	    }
+	}
+
+	
 
 	public static void llamarProcedimiento(Connection c) {
 		try {
@@ -143,11 +168,11 @@ public class Procedimientos {
 		try {
 			Connection c = ConexionBD.getConexion();
 
-		//createProcedure(c);
-			//llamarProcedimiento(c);
-			//callingDatabaseSize(c);
+		     createProcedure(c);
+			  //llamarProcedimiento(c);
+			 //callingDatabaseSize(c);
 			//callingDatabaseSizePretty(c);
-		//	llamarProcedimientoRS(c);
+		    //llamarProcedimientoRS(c);
 			c.close();
 
 		} catch (SQLException e) {
