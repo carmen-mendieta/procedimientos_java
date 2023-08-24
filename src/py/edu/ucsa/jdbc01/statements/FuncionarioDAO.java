@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -134,7 +135,7 @@ public class FuncionarioDAO {
 		try {
 			c = ConexionBD.getConexion();
 			PreparedStatement ps = c.prepareStatement("INSERT INTO funcionarios (legajo, nombre, apellido, "
-					+ "direccion, cedula, celular, email, edad ) VALUES(?,?,?,?,?,?,?,?)");
+					+ "direccion, cedula, celular, email, edad,fecha_ingreso,fecha_nacimiento,fecha_creacion ) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
 			System.out.println(f);
 			ps.setInt(1, f.getLegajo());
 			ps.setString(2, f.getNombre());
@@ -144,6 +145,9 @@ public class FuncionarioDAO {
 			ps.setString(6, f.getCelular());
 			ps.setString(7, f.getEmail());
 			ps.setInt(8, f.getEdad());
+			ps.setTimestamp(9, Timestamp.valueOf(f.getFechaIngreso()));
+			ps.setDate(10, f.getFechaNacimiento());
+			ps.setTimestamp(11, Timestamp.valueOf(f.getFechaCreacion()));
 			int cant = ps.executeUpdate(); // devuelve la cantidad de registros afectados, cuando es insert siempre es 1
 			// ParameterMetaData parameterMetaData = ps.getParameterMetaData();
 			System.out.println("REGISTROS INSERTADOS: " + cant);
@@ -235,7 +239,10 @@ public class FuncionarioDAO {
 		FuncionarioDAO dao = new FuncionarioDAO(); //
 		Connection conPostgres = ConexionBD.getConexionPG();
 		Connection conMysql = ConexionBD.getConexionMySQL();
-		dao.migrarAMySQL(conPostgres, conMysql);
+		//dao.migrarAMySQL(conPostgres, conMysql);
+		
+		Funcionario f= new Funcionario();
+        
 		/*
 		 * dao.agregarColumnaFuncionario(); // dao.crearTabla();
 		 * 

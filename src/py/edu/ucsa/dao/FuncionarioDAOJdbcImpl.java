@@ -1,10 +1,14 @@
 package py.edu.ucsa.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -82,16 +86,18 @@ public class FuncionarioDAOJdbcImpl implements FuncionarioDAO {
 		try {
 			c = ConexionBD.getConexion();
 			PreparedStatement ps = 
-					c.prepareStatement("INSERT INTO funcionarios (legajo, nombre, apellido, "
-							+ "direccion, cedula, celular, email) VALUES(?,?,?,?,?,?,?)");
+					c.prepareStatement("INSERT INTO funcionarios "
+										+ "( nombre, direccion, cedula, celular, email,fecha_nacimiento,fecha_creacion) "
+										+ "VALUES(?,?,?,?,?,?,?)");
 			System.out.println(f);
-			ps.setInt(1, f.getLegajo());
-			ps.setString(2, f.getNombre());
-			ps.setString(3, f.getApellido());
-			ps.setString(4, f.getDireccion());
-			ps.setInt(5, f.getCedula());
-			ps.setString(6, f.getCelular());
-			ps.setString(7, f.getEmail());
+			ps.setString(1, f.getNombre());
+			ps.setString(2, f.getDireccion());
+			ps.setInt(3, f.getCedula());
+			ps.setString(4, f.getCelular());
+			ps.setString(5, f.getEmail());
+			ps.setDate(6,f.getFechaNacimiento());
+			ps.setTimestamp(7, Timestamp.valueOf(f.getFechaCreacion()));
+			
 			int cant = ps.executeUpdate(); //devuelve la cantidad de registros afectados, cuando es insert siempre es 1
 			//ParameterMetaData parameterMetaData = ps.getParameterMetaData();
 			System.out.println("REGISTROS INSERTADOS: " + cant);
@@ -179,29 +185,40 @@ public class FuncionarioDAOJdbcImpl implements FuncionarioDAO {
 	
 	public static void main(String[] args) {
 		FuncionarioDAO dao = DAOFactory.getFuncionarioDAO();
-		dao.crearTabla();
+		//dao.crearTabla();
+//		FuncionarioDTO f = new FuncionarioDTO();
+//		Scanner s = new Scanner(System.in);
+//		
+//		f.setNombre(s.next());
+//		f.setApellido(s.next());
+//		f.setLegajo(s.nextInt());
+//		f.setCedula(s.nextInt());
+//		f.setCelular(s.next());
+//		f.setDireccion(s.next());
+//		f.setEmail(s.next());
+//		
+//		s.close();
+//		
+//		dao.insertar(f);
+//		
+//		dao.listarFuncionarios().forEach((e) -> {
+//			System.out.println(e.getNombre());
+//			System.out.println(e.getApellido());
+//			System.out.println(e.getEmail());
+//		});
+//		
+//		dao.buscar(30, 45, null, null);
+		
 		FuncionarioDTO f = new FuncionarioDTO();
-		Scanner s = new Scanner(System.in);
-		
-		f.setNombre(s.next());
-		f.setApellido(s.next());
-		f.setLegajo(s.nextInt());
-		f.setCedula(s.nextInt());
-		f.setCelular(s.next());
-		f.setDireccion(s.next());
-		f.setEmail(s.next());
-		
-		s.close();
+		f.setNombre("Nombre test");
+		f.setDireccion("Direccion");
+		f.setCedula(12345667);
+		f.setCelular("09812345");
+		f.setEmail("gmail.com test");
+		f.setFechaNacimiento(Date.valueOf(LocalDate.now()));
+		f.setFechaCreacion(LocalDateTime.now());
 		
 		dao.insertar(f);
-		
-		dao.listarFuncionarios().forEach((e) -> {
-			System.out.println(e.getNombre());
-			System.out.println(e.getApellido());
-			System.out.println(e.getEmail());
-		});
-		
-		dao.buscar(30, 45, null, null);
 	}
 
 }

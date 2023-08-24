@@ -1,5 +1,8 @@
 package py.edu.ucsa.jdbc01.statements;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 public class Funcionario {
 	private Long id;
 	private Integer legajo;
@@ -10,6 +13,33 @@ public class Funcionario {
 	private String email;
 	private String direccion;
 	private int edad;
+	private LocalDateTime fechaIngreso;
+	private Date fechaNacimiento;
+	private LocalDateTime fechaCreacion;
+
+	public LocalDateTime getFechaIngreso() {
+		return fechaIngreso;
+	}
+
+	public void setFechaIngreso(LocalDateTime fechaIngreso) {
+		this.fechaIngreso = fechaIngreso;
+	}
+
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public LocalDateTime getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(LocalDateTime fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
 	public int getEdad() {
 		return edad;

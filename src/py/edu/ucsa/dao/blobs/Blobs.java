@@ -39,8 +39,68 @@ public class Blobs extends JFrame{
 	private JScrollPane sp;
 	private Connection con;
 	private JTextField textField;
+	
+	/**
+	 * Constructor sin argumentos 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
+	public Blobs() throws SQLException, ClassNotFoundException {
+
+		// Instancia Conexion
+		con = ConexionBD.getConexion();
+
+		// Prepare y dibuja el panel en la pantalla
+		JPanel panel=new JPanel();
+		panel.setLayout(new BorderLayout());
+		JToolBar toolBar = new JToolBar();
+
+		JButton b = new JButton("Guardar"); // Crean un boton Guardar
+		toolBar.add(b); //Agrega el boton guardar al menu
+		b.addActionListener(new ButtonGuardar());//usamos una clase interna que maneje los eventos
+
+		b = new JButton("Recuperar"); // Crear otro boton llamado Recuperar
+		toolBar.add(b);
+
+		//Creamos un anonymous inner class que maneje los eventos
+		// Action RECUPERAR
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String val = textField.getText();
+				int legajo = Integer.parseInt(val);
+				byte [] image = getBlob(con, legajo); // Obtiene bytes de la foto de la BD
+				JLabel label = new JLabel(new ImageIcon(image)); // Crea una etiqueta
+				sp.setViewportView(label); //Renderiza en la etiqueta la foto
+				pack();
+			}
+		});
+
+		textField = new JTextField(5);
+		toolBar.add(textField);
+
+		panel.add(toolBar,BorderLayout.NORTH); // Agrega el toolbar a la ventana principal
+		sp = new JScrollPane();
+		panel.add(new JScrollPane(sp),BorderLayout.CENTER);
+		getContentPane().add(panel);
+
+
+		JMenuBar menuBar=new JMenuBar();
+		JMenu menuArchivo=new JMenu("Archivo");
+		JMenuItem mi = new JMenuItem("Abrir");
+		mi.addActionListener(new FileChooser());
+		menuArchivo.add(mi);
+		menuBar.add(menuArchivo);
+
+		setJMenuBar(menuBar);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+
+	}
+
 
 	class FileChooser implements ActionListener {
+		//Action GUARDAR EN BASE DE DATOS
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser filechooser = new JFileChooser();
 			int valor = filechooser.showOpenDialog(Blobs.this);
@@ -64,62 +124,7 @@ public class Blobs extends JFrame{
 	}
 
 
-	/**
-	 * Constructor sin argumentos 
-	 * @throws SQLException
-	 * @throws ClassNotFoundException
-	 */
-	public Blobs() throws SQLException, ClassNotFoundException {
-
-
-		con = ConexionBD.getConexion();
-
-		JPanel panel=new JPanel();
-		panel.setLayout(new BorderLayout());
-		JToolBar toolBar = new JToolBar();
-
-		JButton b = new JButton("Guardar");
-		toolBar.add(b);
-		b.addActionListener(new ButtonGuardar());//usamos una clase interna que maneje los eventos
-
-		b = new JButton("Recuperar");
-		toolBar.add(b);
-
-		//Creamos un anonymous inner class que maneje los eventos
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String val = textField.getText();
-				int legajo = Integer.parseInt(val);
-				byte [] image =getBlob(con, legajo);
-				JLabel label = new JLabel(new ImageIcon(image));
-				sp.setViewportView(label);
-				pack();
-			}
-		});
-
-		textField = new JTextField(5);
-		toolBar.add(textField);
-
-		panel.add(toolBar,BorderLayout.NORTH);
-		sp = new JScrollPane();
-		panel.add(new JScrollPane(sp),BorderLayout.CENTER);
-		getContentPane().add(panel);
-
-
-		JMenuBar menuBar=new JMenuBar();
-		JMenu menuArchivo=new JMenu("Archivo");
-		JMenuItem mi = new JMenuItem("Abrir");
-		mi.addActionListener(new FileChooser());
-		menuArchivo.add(mi);
-		menuBar.add(menuArchivo);
-
-		setJMenuBar(menuBar);
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
-
-	}
-
+	
 	public void insertBlob(Connection con, int pk) {
 
 		try {
