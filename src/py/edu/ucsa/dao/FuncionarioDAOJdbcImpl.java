@@ -87,16 +87,18 @@ public class FuncionarioDAOJdbcImpl implements FuncionarioDAO {
 			c = ConexionBD.getConexion();
 			PreparedStatement ps = 
 					c.prepareStatement("INSERT INTO funcionarios "
-										+ "( nombre, direccion, cedula, celular, email,fecha_nacimiento,fecha_creacion) "
-										+ "VALUES(?,?,?,?,?,?,?)");
+										+ "( legajo,nombre,apellido, direccion, cedula, celular, email,fecha_nacimiento,fecha_creacion) "
+										+ "VALUES(?,?,?,?,?,?,?,?,?)");
 			System.out.println(f);
-			ps.setString(1, f.getNombre());
-			ps.setString(2, f.getDireccion());
-			ps.setInt(3, f.getCedula());
-			ps.setString(4, f.getCelular());
-			ps.setString(5, f.getEmail());
-			ps.setDate(6,f.getFechaNacimiento());
-			ps.setTimestamp(7, Timestamp.valueOf(f.getFechaCreacion()));
+			ps.setInt(1, f.getLegajo());
+			ps.setString(2, f.getNombre());
+			ps.setString(3, f.getApellido());
+			ps.setString(4, f.getDireccion());
+			ps.setInt(5, f.getCedula());
+			ps.setString(6, f.getCelular());
+			ps.setString(7, f.getEmail());
+			ps.setDate(8,f.getFechaNacimiento());
+			ps.setTimestamp(9, Timestamp.valueOf(f.getFechaCreacion()));
 			
 			int cant = ps.executeUpdate(); //devuelve la cantidad de registros afectados, cuando es insert siempre es 1
 			//ParameterMetaData parameterMetaData = ps.getParameterMetaData();
@@ -208,13 +210,15 @@ public class FuncionarioDAOJdbcImpl implements FuncionarioDAO {
 //		});
 //		
 //		dao.buscar(30, 45, null, null);
-		
+//		
 		FuncionarioDTO f = new FuncionarioDTO();
-		f.setNombre("Nombre test");
-		f.setDireccion("Direccion");
+		f.setLegajo(342);
+		f.setNombre("Maria");
+		f.setApellido("Mendieta");
+		f.setDireccion("Ita");
 		f.setCedula(12345667);
-		f.setCelular("09812345");
-		f.setEmail("gmail.com test");
+		f.setCelular("12564625");
+		f.setEmail("gmail.com maria");
 		f.setFechaNacimiento(Date.valueOf(LocalDate.now()));
 		f.setFechaCreacion(LocalDateTime.now());
 		
